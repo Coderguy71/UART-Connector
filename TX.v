@@ -10,7 +10,7 @@ module TX(
 
 
 localparam IDLE=1, START=2, PROCESS=3, STOP=4;
-reg[2:0] state, nextState;
+reg[1:0] state; 
 wire tick;
 reg[2:0] bit_index;
 reg[7:0] shift_reg;
