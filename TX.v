@@ -10,12 +10,12 @@ module TX(
 
 
 localparam IDLE=1, START=2, PROCESS=3, STOP=4;
-reg[1:0] state; 
+reg[1:0] state;
 wire tick;
 reg[2:0] bit_index;
 reg[7:0] shift_reg;
 
-BAUD_RATE_GEN #(         //new instantiation ive never done, first part is the module name with the parameters and the second one is the instance name with ports
+baud_rate_gen#(         //new instantiation ive never done, first part is the module name with the parameters and the second one is the instance name with ports
     .OVERSAMPLE(1),
     .BAUDRATE(9600),
     .CLOCKVALUE(27_000_000)
