@@ -1,0 +1,17 @@
+# UART-Interfaced 4-Bit ALU on FPGA
+ 
+A Verilog implementation of a 4-bit ALU controlled entirely over UART, built on the Sipeed Tang Nano 20K (Gowin GW2AR-18). Since the board has no physical switches or a 7-segment display, 
+UART serves as the primary interface for both sending operands/opcodes to the ALU and reading back results. This can also be utilized in a variety of projects. 
+
+## Status
+This project is being built and documented incrementally as a portfolio piece, with each module simulated and verified before moving to the next. Currently V1 of the RX, TX, and BAUD_RATE_GEN are published. 
+ 
+| Module | Status |
+|---|---|
+| `baud_rate_gen` | ✅ done, logically verified |
+| UART `TX` | ✅ done, needs simulation |
+| UART `RX` | ✅ done, needs simulation |
+| ALU core | ❌ not started |
+| Top-level integration | ❌ not started |
+| Pin constraints (`.cst`) | ❌ not started |
+| Testbenches | ❌ not started |
