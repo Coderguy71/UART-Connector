@@ -8,14 +8,14 @@ This project is being built and documented incrementally as a portfolio piece, w
  
 | Module | Status |
 |---|---|
-| `BAUD RATE GEN` | ✅ done, logically verified |
-| UART `TX` | ✅ done, needs simulation |
-| UART `RX` | ✅ done, needs simulation |
-| ALU CORE | ❌ not started |
+| `BAUD RATE GEN` | ✅ done|
+| UART `TX` | ✅ done|
+| UART `RX` | ✅ done|
+| ALU CORE | ✅ done|
 | ALU TESTBENCH | ❌ not started |
+| RX TWO-FLOP SYNCRHONIZER | ❌ not started |
 | TX TESTBENCH | ❌ not started |
 | RX TESTBENCH | ❌ not started |
-| RX TWO-FLOP SYNCRHONIZER | ❌ not started |
 | COMMAND PARSER | ❌ not started |
 | TOP-LEVEL INTEGRATION | ❌ not started |
 | PiIN CONSTRAINTS (`.cst`) | ❌ not started |
