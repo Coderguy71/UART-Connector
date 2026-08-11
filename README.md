@@ -12,7 +12,7 @@ This project is being built and documented incrementally as a portfolio piece, w
 | UART `TX` | ✅ done|
 | UART `RX` | ✅ done|
 | ALU CORE | ✅ done|
-| ALU TESTBENCH | ❌ not started |
+| ALU TESTBENCH | ✅ done|
 | RX TWO-FLOP SYNCRHONIZER | ❌ not started |
 | TX TESTBENCH | ❌ not started |
 | RX TESTBENCH | ❌ not started |
