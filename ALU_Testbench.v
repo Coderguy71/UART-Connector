@@ -2,6 +2,8 @@ module ALU_Testbench;
     reg[3:0]  A, B;
     reg[2:0] Operation;
     wire[7:0] result;
+    integer pass_count = 0;
+    integer test_count = 0;
     
 
     ALU ALUtest (
@@ -11,53 +13,40 @@ module ALU_Testbench;
         .result(result)
     );
 
+    task run_test; 
+        input[3:0] Ain, Bin;
+        input[2:0] Operationin;
+        input[7:0] Expected_result;
+        input[127:0] test_name;
+        begin 
+            A = Ain;
+            B = Bin;
+            Operation = Operationin;
+            #10;
+            test_count = test_count + 1;
+            if(result == Expected_result) begin
+                pass_count = pass_count + 1;
+                $display("%s: PASS (result=%d)", test_name, result);
+            end else begin
+                $display("%s: FAIL (expected=%d, result=%d)", test_name, Expected_result, result);
+            end
+        end
+    endtask
+
     initial begin
-      //originally used: $display("A=%d B=%d Op=%b Result=%d", A, B, Operation, result); //%d means decimal and %b mean binary
-        assign A = 4'b0001;
-        assign B = 4'b0001;
-        assign Operation = 3'b001;
-         #10;
-         if (result == 8'd2)
-            $display("ADD: PASS (result=%d)", result);
-        else
-            $display("ADD: FAIL (result=%d)", result);
-        
-        assign A = 4'b0001;
-        assign B = 4'b0001;
-        assign Operation = 3'b010;
-         #10;
-         if (result == 8'd0)
-            $display("SUB: PASS (result=%d)", result);
-        else
-            $display("SUB: FAIL (result=%d)", result);
+        $dumpfile("alu_wave.vcd");
+        $dumpvars(0, ALU_Testbench);
 
-        assign A = 4'b0001;
-        assign B = 4'b0001;
-        assign Operation = 3'b011;
-         #10;
-         if (result == 8'd1)
-            $display("MULT: PASS (result=%d)", result);
-        else
-            $display("MULT: FAIL (result=%d)", result);
-        
-        assign A = 4'b0001;
-        assign B = 4'b0001;
-        assign Operation = 3'b100;
-         #10;
-         if (result == 8'd2)
-            $display("SHIFT LEFT: PASS (result=%d)", result);
-        else
-            $display("SHIFT LEFT: FAIL (result=%d)", result);
+        run_test(4'd1, 4'd1, 3'b001, 8'd2, "ADD");
+        run_test(4'd1, 4'd1, 3'b010, 8'd0, "SUBTRACT");
+        run_test(4'd1, 4'd1, 3'b011, 8'd1, "MULTIPLY");
+        run_test(4'd1, 4'd1, 3'b100, 8'd2, "SHIFT_LEFT");
+        run_test(4'd1, 4'd1, 3'b101, 8'd0, "SHIFT_RIGHT");
+        run_test(4'd1, 4'd1, 3'b111, 8'd0, "OP_ERROR");
+        run_test(4'd1, 4'd1, 3'b111, 8'd0, "OP_ERROR");
 
-        assign A = 4'b0001;
-        assign B = 4'b0001;
-        assign Operation = 3'b101;
-         #10;
-         if (result == 8'd0)
-            $display("SHIFT RIGHT: PASS (result=%d)", result);
-        else
-            $display("SHIFT RIGHT: FAIL (result=%d)", result);
-
+        $display("---");
+        $display("%d/%d tests passed", pass_count, test_count);
         $finish;
     end
 
