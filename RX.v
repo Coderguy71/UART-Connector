@@ -3,7 +3,7 @@
 module RX(
     input clk, 
     input reset, 
-    input rx, 
+    input rx_in, 
     output reg [7:0]data_out,
     output reg data_done
 );
@@ -14,8 +14,10 @@ reg [2:0] bit_index;
 reg[7:0] shift_reg, tick_counter;
 reg[2:0] state;
 wire tick;
+reg sync_stage1, rx;
 
             //revamp everything for efficiency later
+
 
 baud_rate_gen#(
     .OVERSAMPLE(16),
@@ -27,6 +29,17 @@ baud_rate_gen#(
     .reset(reset),
     .baud_clock(tick)
 );
+
+always@(posedge clk) begin //2 FF Sync since rx is recieving from async source from my mac
+    if(reset) begin
+        sync_stage1 <= 0;
+        rx <= 0;
+    end
+    else begin
+        sync_stage1 <= rx_in; 
+        rx <= sync_stage1;
+    end
+end
 
 always@(posedge clk) begin
     if(reset) begin
