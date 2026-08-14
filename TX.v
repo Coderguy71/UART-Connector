@@ -1,3 +1,5 @@
+`timescale 1ns/1ps
+
 module TX(
     input clk,
     input reset,
@@ -9,8 +11,8 @@ module TX(
 
 
 
-localparam IDLE=1, START=2, PROCESS=3, STOP=4;
-reg[1:0] state;
+localparam IDLE=1, PROCESS=2, STOP=3;
+reg[1:0] state = IDLE;
 wire tick;
 reg[2:0] bit_index;
 reg[7:0] shift_reg;
@@ -36,23 +38,21 @@ always @(posedge clk) begin
     else begin
         case(state)
             IDLE: begin
-                tx <= 1;
                 if (start) begin
+                    tx <= 0;
                     busy <= 1;
                     shift_reg <= data_in;
-                    state <= START;
+                    state <= PROCESS;
+                end
+                else begin
+                    tx <= 1;
+                    busy <= 0;
                 end
             end
 
-            START: begin
-                tx <= 0;
-                if (tick)
-                    state <= PROCESS:
-            end
-
             PROCESS: begin
-                tx <= shift_reg[0];
                 if(tick) begin
+                    tx <= shift_reg[0];
                     if(bit_index == 3'b111)
                         state <= STOP;
                     else begin
@@ -71,6 +71,14 @@ always @(posedge clk) begin
                 end
 
                 end
+
+            default: begin
+                state     <= IDLE;
+                tx        <= 1;
+                busy      <= 0;
+                bit_index <= 3'b000;
+            end
+            
         endcase
     end
 end
