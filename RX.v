@@ -1,4 +1,4 @@
-//v1 RX, no two-flop synchronizer
+`timescale 1ns/1ps
 
 module RX(
     input clk, 
@@ -22,7 +22,6 @@ reg sync_stage1, rx;
 baud_rate_gen#(
     .OVERSAMPLE(16),
     .BAUDRATE(9600),
-    
     .CLOCKVALUE(27_000_000)
 ) rx_baudgen(
     .clk(clk),
@@ -47,15 +46,16 @@ always@(posedge clk) begin
         bit_index <= 0;
         state <= IDLE;
         tick_counter <= 0;
+        data_done <= 0;
     end
     else begin
-        data_done <= 0;
         case(state)
             IDLE: begin
                 if(!rx) begin
                     state <= START;
                     bit_index <= 0;
                     tick_counter <= 0;
+                    data_out <= 0;
                 end
 
                 else
@@ -65,11 +65,11 @@ always@(posedge clk) begin
                 if(tick) begin
                     tick_counter <= tick_counter + 1;
                 end
-                if((tick_counter==8) & !rx) begin
+                if((tick_counter==7) & !rx) begin
                     state <= PROCESS;
                     tick_counter <= 0;                  //fix tick counting for robustness later
                 end
-                else if(tick_counter!=8 && !rx)
+                else if(tick_counter!=7 && !rx)
                     state <= START; //redundant but idt it takes up space
                 else begin
                     state <= IDLE;
@@ -81,7 +81,7 @@ always@(posedge clk) begin
                 if(tick) 
                     tick_counter <= tick_counter + 1;
 
-                if(tick_counter==8) begin
+                if(tick_counter==15) begin
                     bit_index <= bit_index + 1;
                     shift_reg <= {rx, shift_reg[7:1]};
                     tick_counter <= 0;
@@ -94,9 +94,10 @@ always@(posedge clk) begin
                 if(tick) 
                     tick_counter <= tick_counter + 1;
 
-                if(tick_counter==8) begin
+                if(tick_counter==15) begin
                     if(rx) begin
                         data_out <= shift_reg;
+                        data_done <= 1;
                         state <= DONE;
                         tick_counter <= 0;
                     end
@@ -106,9 +107,15 @@ always@(posedge clk) begin
             end
 
             DONE: begin
-                data_done <= 1;
                 state <= IDLE;
-                
+            end
+
+            default: begin
+                tick_counter <= 0;
+                bit_index <= 0;
+                shift_reg <= 0;
+                state <= IDLE;
+                data_done <= 0;
             end
         endcase
     end
