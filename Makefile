@@ -1,12 +1,23 @@
-TOP = ALU_Testbench
-SRCS = ALU.v ALU_Testbench.v
+ALU_TOP = ALU_Testbench
+ALU_SRCS = ALU.v ALU_Testbench.v
 
-sim: $(SRCS)
-	verilator --binary --trace $(SRCS) --top-module $(TOP)
-	./obj_dir/V$(TOP)
+TX_TOP = TX_Testbench
+TX_SRCS = TX.v TX_Testbench.v BAUD_RATE_GEN.v
 
-wave:
+
+alu: $(ALU_SRCS)
+	verilator --binary --trace $(ALU_SRCS) --top-module $(ALU_TOP)
+	./obj_dir/V$(ALU_TOP)
+
+tx: $(TX_SRCS)
+	verilator --binary --trace -Wno-WIDTHEXPAND -Wno-TIMESCALEMOD $(TX_SRCS) --top-module $(TX_TOP)
+	./obj_dir/V$(TX_TOP)
+
+alu_wave:
 	gtkwave alu_wave.vcd &
 
-clean: 
+tx_wave:
+	gtkwave tx_wave.vcd &
+
+clean:
 	rm -rf obj_dir *.vcd
