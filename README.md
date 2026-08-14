@@ -14,7 +14,7 @@ This project is being built and documented incrementally as a portfolio piece, w
 | ALU CORE | ✅ done|
 | ALU TESTBENCH | ✅ done|
 | RX TWO-FLOP SYNCRHONIZER |✅ done|
-| TX TESTBENCH | ❌ not started |
+| TX TESTBENCH | 🔄 DEVELOPING |
 | RX TESTBENCH | ❌ not started |
 | COMMAND PARSER | ❌ not started |
 | TOP-LEVEL INTEGRATION | ❌ not started |
