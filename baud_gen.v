@@ -26,3 +26,10 @@ end
 
 
 endmodule
+
+
+//have to change the structure for baud_val and count because of the makefile error with differing lengths, will do later but rn i have
+/* tx: $(TX_SRCS)
+	verilator --binary --trace -Wno-WIDTHEXPAND -Wno-TIMESCALEMOD $(TX_SRCS) --top-module $(TX_TOP)
+	./obj_dir/V$(TX_TOP) */
+
