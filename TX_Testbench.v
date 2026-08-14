@@ -7,7 +7,7 @@ module TX_Testbench;
     wire tx, busy, tick;
     integer pass_count = 0;
     integer test_count = 0;
-    always #1.11 clk = ~clk;
+    always #18.5185 clk = ~clk;
     integer i;
     
     baud_rate_gen#(
@@ -80,8 +80,13 @@ module TX_Testbench;
         $dumpvars(0, TX_Testbench.start);
         $dumpvars(0, TX_Testbench.reset);
 
-        run_test(1'b0, 1'b1, 8'b01101001, 10'b1011010010, 10'b0111111111, "MockTest");
-
+        run_test(1'b0, 1'b1, 8'b01101001, 10'b1011010010, 10'b0111111111, "Mock");
+        run_test(1'b0, 1'b1, 8'b01111001, 10'b1011110010, 10'b0111111111, "Value1");
+        run_test(1'b1, 1'b0, 8'b01111001, 10'b1111111111, 10'b0000000000, "Reset1");
+        run_test(1'b1, 1'b1, 8'b01111001, 10'b1111111111, 10'b0000000000, "Reset2");
+        run_test(1'b0, 1'b0, 8'b01111001, 10'b1111111111, 10'b0000000000, "NoInput");
+        run_test(1'b0, 1'b1, 8'b11111111, 10'b1111111110, 10'b0111111111, "All1");
+        run_test(1'b0, 1'b1, 8'b11111111, 10'b1111111110, 10'b0111111111, "All1");
 
         $display("---");
         $display("%0d/%0d checks passed", pass_count, test_count);
