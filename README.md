@@ -16,7 +16,7 @@ This project is being built and documented incrementally as a portfolio piece, w
 | RX TWO-FLOP SYNCRHONIZER |✅ done|
 | TX TESTBENCH |✅ done|
 | RX TESTBENCH |✅ done|
-| COMMAND PARSER | ❌ not started |
-| TOP-LEVEL INTEGRATION | ❌ not started |
-| PiIN CONSTRAINTS (`.cst`) | ❌ not started |
-| END TO END TESTING | ❌ not started |
+| COMMAND PARSER |✅ done|
+| TOP-LEVEL INTEGRATION |✅ done|
+| PiIN CONSTRAINTS (`.cst`) |✅ done|
+| END TO END TESTING |DEBUGGING|
