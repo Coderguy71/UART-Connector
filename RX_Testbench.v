@@ -38,18 +38,18 @@ module RX_Testbench;
 
         begin 
             #10;
-            reset = reset_in;
+            reset = reset_in; //lets test reset after data already gets a value
+
             rx_in = rx_in_in[0];    
 
             @(posedge clk) begin
                 #10;
-                test_count = test_count + 1;
                 reset = 0;
+                test_count = test_count + 1;
 
                 repeat(8) @(posedge tick);
                 #10;
                 rx_in = rx_in_in[1];
-
                 for(i = 2; i < 9; i = i+1) begin
                     repeat(16) @(posedge tick);
                     #10;
@@ -83,6 +83,15 @@ module RX_Testbench;
         $dumpvars(0, RX_Testbench.data_done);
 
         run_test(1'b0, 10'b1100111000, 8'b10011100, 1'b1, "Mock");
+        run_test(1'b0, 10'b1000000000, 8'b00000000, 1'b1, "All0");
+        run_test(1'b0, 10'b1111111110, 8'b11111111, 1'b1, "All1");
+        run_test(1'b0, 10'b1001010001, 8'b00010100, 1'b1, "LateStart");
+        run_test(1'b0, 10'b1111111111, 8'b00010100, 1'b1, "NoStart"); //should keep the same as the last one since it never does anything to data_out hopefully
+
+        $display("---");
+        $display("%0d/%0d checks passed", pass_count, test_count);
+        $finish;
+
         $finish;
     end   
 
