@@ -15,7 +15,7 @@ This project is being built and documented incrementally as a portfolio piece, w
 | ALU TESTBENCH | ✅ done|
 | RX TWO-FLOP SYNCRHONIZER |✅ done|
 | TX TESTBENCH |✅ done|
-| RX TESTBENCH | 🔄 DEVELOPING |
+| RX TESTBENCH |✅ done|
 | COMMAND PARSER | ❌ not started |
 | TOP-LEVEL INTEGRATION | ❌ not started |
 | PiIN CONSTRAINTS (`.cst`) | ❌ not started |
