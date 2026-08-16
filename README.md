@@ -17,6 +17,8 @@ This project is being built and documented incrementally as a portfolio piece, w
 | TX TESTBENCH |✅ done|
 | RX TESTBENCH |✅ done|
 | COMMAND PARSER |✅ done|
+| COMMAND PARSER TESTBENCH|❌ NOT DONE|
 | TOP-LEVEL INTEGRATION |✅ done|
-| PiIN CONSTRAINTS (`.cst`) |✅ done|
-| END TO END TESTING |DEBUGGING|
+| TOP-LEVEL TESTBENCH |❌ NOT DONE|
+| PIN CONSTRAINTS (`.cst`) |✅ done|
+| END TO END TESTING | ❌ DEBUGGING|
