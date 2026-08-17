@@ -26,13 +26,13 @@ module TopModule(
         .result(result)
     );
 
-        TX TopTX(
-        .clk(clk),
-        .reset(reset),
-        .data_in(result),
-        .start(ALUready),
-        .tx(tx),
-        .busy(busy)
-    );
+TX TopTX(
+    .clk(clk),
+    .reset(reset),
+    .data_in(result),
+    .start(ALUready),
+    .tx(tx),
+    .busy(busy)
+);
 
 endmodule
