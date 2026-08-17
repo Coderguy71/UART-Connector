@@ -1,23 +1,23 @@
-`timescale 1ns/1ps
-
 module TX(
     input clk,
     input reset,
-    input [7:0]data_in,
+    input [7:0] data_in,
     input start,
     output reg tx,
     output reg busy
 );
 
+localparam IDLE = 2'd0;
+localparam DATA = 2'd1;
+localparam STOP = 2'd2;
 
+reg [1:0] state;
+reg [2:0] bit_index;
+reg [7:0] shift_reg;
 
-localparam IDLE=1, PROCESS=2, STOP=3;
-reg[1:0] state = IDLE;
 wire tick;
-reg[2:0] bit_index;
-reg[7:0] shift_reg;
 
-baud_rate_gen#(         //new instantiation ive never done, first part is the module name with the parameters and the second one is the instance name with ports
+baud_rate_gen #(
     .OVERSAMPLE(1),
     .BAUDRATE(9600),
     .CLOCKVALUE(27_000_000)
@@ -27,64 +27,62 @@ baud_rate_gen#(         //new instantiation ive never done, first part is the mo
     .baud_clock(tick)
 );
 
-
 always @(posedge clk) begin
-    if(reset) begin
+    if (reset) begin
         state <= IDLE;
-        tx <= 1;
-        busy <= 0;
+        tx <= 1'b1;
+        busy <= 1'b0;
         bit_index <= 0;
-    end 
+        shift_reg <= 0;
+    end
     else begin
-        case(state)
+        case (state)
+
             IDLE: begin
+                tx <= 1'b1;
+                busy <= 1'b0;
+
                 if (start) begin
-                    tx <= 0;
-                    busy <= 1;
                     shift_reg <= data_in;
-                    state <= PROCESS;
-                end
-                else begin
-                    tx <= 1;
-                    busy <= 0;
+                    bit_index <= 0;
+                    tx <= 1'b0;
+                    busy <= 1'b1;
+                    state <= DATA;
                 end
             end
 
-            PROCESS: begin
-                if(tick) begin
+            DATA: begin
+                if (tick) begin
                     tx <= shift_reg[0];
-                    if(bit_index == 3'b111)
+
+                    if (bit_index == 7) begin
+                        bit_index <= 0;
                         state <= STOP;
+                    end
                     else begin
                         bit_index <= bit_index + 1;
-                        shift_reg <= shift_reg >> 1;  //first time using logical right shift operation. its also shift_reg <= {1'b0, shift_reg[7:1]}
+                        shift_reg <= {1'b0, shift_reg[7:1]};
                     end
                 end
             end
 
             STOP: begin
-                tx <= 1;
                 if (tick) begin
-                    bit_index <= 0;
-                    busy <= 0;
+                    tx <= 1'b1;
+                    busy <= 1'b0;
                     state <= IDLE;
                 end
-
-                end
+            end
 
             default: begin
-                state     <= IDLE;
-                tx        <= 1;
-                busy      <= 0;
-                bit_index <= 3'b000;
+                state <= IDLE;
+                tx <= 1'b1;
+                busy <= 1'b0;
+                bit_index <= 0;
             end
-            
+
         endcase
     end
 end
-        
-
-
-
 
 endmodule
