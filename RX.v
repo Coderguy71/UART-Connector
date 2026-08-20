@@ -5,7 +5,7 @@ module RX(
     output reg [7:0] data_out,
     output reg data_done
 );
-
+//fsm to organize the flow of the rx 
 localparam IDLE    = 3'd0;
 localparam START   = 3'd1;
 localparam DATA    = 3'd2;
@@ -19,7 +19,7 @@ reg [3:0] tick_counter;
 reg sync_stage1, rx;
 wire tick;
 
-baud_rate_gen #(
+    baud_rate_gen #(        //insantiates the baud gen, first bracket is the parameters and the second bracket are the ports
     .OVERSAMPLE(16),
     .BAUDRATE(9600),
     .CLOCKVALUE(27_000_000)
@@ -29,7 +29,7 @@ baud_rate_gen #(
     .baud_clock(tick)
 );
 
-always @(posedge clk) begin
+    always @(posedge clk) begin    //reset block and 2ff synchronizer
     if (reset) begin
         sync_stage1 <= 1'b1;
         rx <= 1'b1;
