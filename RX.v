@@ -6,10 +6,10 @@ module RX(
     output reg data_done
 );
 //fsm to organize the flow of the rx 
-localparam IDLE    = 3'd0;
-localparam START   = 3'd1;
-localparam DATA    = 3'd2;
-localparam STOP    = 3'd3;
+localparam IDLE    = 0;
+localparam START   = 1;
+localparam DATA    = 2;
+localparam STOP    = 3;
 
 reg [2:0] state;
 reg [2:0] bit_index;
@@ -42,7 +42,7 @@ end
 
 always @(posedge clk) begin
     if (reset) begin
-        state <= IDLE;
+        state <= IDLE; 
         bit_index <= 0;
         shift_reg <= 0;
         tick_counter <= 0;
@@ -50,23 +50,23 @@ always @(posedge clk) begin
         data_done <= 0;
     end
     else begin
-        data_done <= 0;
+        data_done <= 0; //once we start a new cycle, we set data_done to 0
 
-        if (tick) begin
-            case (state)
-
-                IDLE: begin
+        if (tick) begin //after one tick, we begin our cycle 
+            case (state) 
+                //in the idle state, we set tick_counter and bit_index to 0 starting the collection of a new byte. Then, if RX goes low we start
+                IDLE: begin 
                     tick_counter <= 0;
                     bit_index <= 0;
 
                     if (!rx)
                         state <= START;
                 end
-
+                /* in the start state, once we hit 8 ticks (7 because it starts at 0) we check if RX is still 0, and if it is we go to the Data state, then reset tick_counter. 
+                We check at 8 because its in the middle and the most stable.  */
                 START: begin
                     if (tick_counter == 7) begin
                         tick_counter <= 0;
-
                         if (!rx)
                             state <= DATA;
                         else
@@ -76,7 +76,7 @@ always @(posedge clk) begin
                         tick_counter <= tick_counter + 1;
                     end
                 end
-
+                //
                 DATA: begin
                     if (tick_counter == 15) begin
                         tick_counter <= 0;
@@ -112,7 +112,7 @@ always @(posedge clk) begin
                     end
                 end
 
-                default: begin
+                default: begin //default case is IDLE and it resets the tick counter and bit_index back to 0, resetting the whole rx system basically if something weird happens
                     state <= IDLE;
                     tick_counter <= 0;
                     bit_index <= 0;
