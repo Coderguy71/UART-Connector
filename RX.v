@@ -76,12 +76,13 @@ always @(posedge clk) begin
                         tick_counter <= tick_counter + 1;
                     end
                 end
-                //
+                /* in the data state we wait for tick_counter to go to 16 to find the middle of each data bit (since we already waited 8 so 16 takes us the the midpoint of the next bit). 
+                Then we wait for 8 samples (8 bits) and go to the stop state. The structure for this is, outside is the tick counting and inside is the bit counting.*/
                 DATA: begin
                     if (tick_counter == 15) begin
                         tick_counter <= 0;
 
-                        // Sample current data bit
+                        // Sample and shift current data bit into shift_reg
                         shift_reg[bit_index] <= rx;
 
                         if (bit_index == 7) begin
@@ -95,7 +96,8 @@ always @(posedge clk) begin
                         tick_counter <= tick_counter + 1;
                     end
                 end
-
+                /*In the stop state, once we check for stability in the stop bit (tick_counter == 15) and rx is still high, then we transfer the bits to data_out
+                Then we set data_done high and go back to IDLE*/
                 STOP: begin
                     if (tick_counter == 15) begin
                         tick_counter <= 0;
